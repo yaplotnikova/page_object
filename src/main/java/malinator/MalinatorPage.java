@@ -3,20 +3,27 @@ package malinator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.BasePage;
 
 import java.util.NoSuchElementException;
 
 public class MalinatorPage extends BasePage {
-    private By enterEmailField = By.cssSelector("[name='search']");
-    private By searchButton = By.xpath("//div[1]/div/div/div/div/button");
-    private By lastLetter = By.xpath("//td[contains(text(), 'qwerty')]");
+    @FindBy(css = "[name='search']")
+    private WebElement enterEmailField;
+    @FindBy(xpath = "//div[1]/div/div/div/div/button")
+    private WebElement searchButton;
+    @FindBy(xpath = "//td[contains(text(), 'qwerty')]")
+    private WebElement lastLetter;
 
 
     public MalinatorPage(WebDriver driver) {
         super(driver);
         pageURL = "https://www.mailinator.com/";
+        PageFactory.initElements(driver, this);
     }
 
 
@@ -25,20 +32,20 @@ public class MalinatorPage extends BasePage {
     }
 
     public void malinatorLogin() {
-        driver.findElement(enterEmailField).sendKeys("yaplotnikovatest@mailinator.com");
-        driver.findElement(searchButton).click();
+        enterEmailField.sendKeys("yaplotnikovatest@mailinator.com");
+        searchButton.click();
     }
 
     public void clickLastLetter() {
-        webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(lastLetter));
-        driver.findElement(lastLetter).click();
+        webDriverWait.until(ExpectedConditions.visibilityOf(lastLetter));
+        lastLetter.click();
     }
 
     public void waitUntilLettersIsDisplayed() {
         for (int i = 0; i < 8; i++) {
             System.out.println(i);
             try {
-                if (driver.findElement(lastLetter).isDisplayed()) {
+                if (lastLetter.isDisplayed()) {
                     return;
                 }
             } catch (NoSuchElementException e) {
